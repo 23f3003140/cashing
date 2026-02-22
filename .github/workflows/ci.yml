@@ -1,0 +1,28 @@
+name: CI with Cache
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # REQUIRED: Prime cache step with EXACT key from assignment
+    - name: prime-cache-237be04
+      id: cache-step
+      uses: actions/cache@v4
+      with:
+        path: .github/cache-test  # Simple folder we create below
+        key: cache-237be04       # Exact assignment key
+
+    - name: Echo cache result
+      run: echo "Cache result: ${{ steps.cache-step.outputs.cache-hit }}"
+
+    # Create some content to actually cache (primes it)
+    - name: Prime cache content
+      run: |
+        mkdir -p .github/cache-test
+        echo "cache-content-$(date)" > .github/cache-test/test.txt
+        echo "Cache was primed with content!"
